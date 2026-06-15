@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd LaunchAgent for feishu-mc-bot.
+
+  安装步骤：
+    1. 把本文件中的占位符替换为你的实际路径与用户名：
+       - {{USERNAME}}            -> 你的 macOS 用户名（例如 `whoami` 的输出）
+       - {{PROJECT_DIR}}         -> 项目绝对路径（例如 /Users/alice/Code/feishu-mc-bot）
+       - {{NODE_BIN}}            -> `which node` 的输出（例如 /opt/homebrew/bin/node 或 /usr/local/bin/node）
+    2. 先执行 `npm install && npm run build` 在项目内生成 dist/。
+    3. 拷贝到 LaunchAgents：
+         cp scripts/com.user.feishu-mc-bot.plist ~/Library/LaunchAgents/
+    4. 加载并启动：
+         launchctl unload ~/Library/LaunchAgents/com.user.feishu-mc-bot.plist 2>/dev/null
+         launchctl load   -w ~/Library/LaunchAgents/com.user.feishu-mc-bot.plist
+    5. 查看日志：
+         tail -f /tmp/feishu-mc-bot.out.log /tmp/feishu-mc-bot.err.log
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.feishu-mc-bot</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{NODE_BIN}}</string>
+        <string>{{PROJECT_DIR}}/dist/index.js</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>{{PROJECT_DIR}}</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- 确保 screen / pkill / bash 等命令能被找到 -->
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>/Users/{{USERNAME}}</string>
+        <!-- 如果不想用项目内的 .env，可在此显式注入：
+        <key>APP_ID</key><string>cli_xxx</string>
+        <key>APP_SECRET</key><string>xxx</string>
+        -->
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <!-- 崩溃后等待 5s 再拉起，避免疯狂重启 -->
+    <key>ThrottleInterval</key>
+    <integer>5</integer>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/feishu-mc-bot.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/feishu-mc-bot.err.log</string>
+</dict>
+</plist>

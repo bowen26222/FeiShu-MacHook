@@ -1,0 +1,30 @@
+{
+  "name": "feishu-mc-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Feishu (Lark) bot running on macOS that controls a Minecraft server via screen.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf dist"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@larksuiteoapi/node-sdk": "^1.43.0",
+    "dotenv": "^16.4.5",
+    "pino": "^9.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "pino-pretty": "^11.2.2",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  }
+}
